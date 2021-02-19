@@ -1,0 +1,13 @@
+= Spock with String Kotlin-Powered Types Sandbox
+
+*Features*
+
+* Spock
+* Kotlin
+* Strong Types
+* Builders
+* JVM 11
+
+== Usage
+
+* Build complete project `./gradlew build`
