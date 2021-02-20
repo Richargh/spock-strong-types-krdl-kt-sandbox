@@ -37,4 +37,16 @@ class PersonSpecification extends Specification {
             person { it.withName("John") }  | _
             person { it.withName("John") }  | _
     }
+
+    def "String can be cast to John via type coercion"(){
+        /**
+         * Note that we added the NameToPersonConversion via resources/META-INF.
+         * We could've also added it explicitly in the setup-Method: String.mixin(NameToPersonConversion)
+         */
+        when:
+        Person person = "John" as Person
+        then:
+        person.name == new Name("John")
+    }
+
 }

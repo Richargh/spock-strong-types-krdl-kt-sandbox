@@ -3,7 +3,6 @@ package de.richargh.sandbox.spock.strongtypes
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.catchThrowable
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.converter.ConvertWith
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
 
@@ -30,7 +29,7 @@ internal class PersonTest {
         "John",
         "Lisa"])
     fun `all names are allowed`(
-            @ConvertWith(NamedPersonConverter::class) testling: Person) {
+            @ConvertNameToPerson testling: Person) {
         // arrange
 
         // act
