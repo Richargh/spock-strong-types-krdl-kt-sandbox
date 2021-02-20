@@ -31,6 +31,8 @@ They do serve their purpose though and help me illustrate and compare Spock (and
 
 Junit5 has the `@CsvSource` Annotation for tabular data-driven tests, Spock has the table syntax feature.
 
+=== JUnit5
+
 Junit5 provides a link:https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-argument-conversion-implicit-fallback[implicit and explicit] String to Object conversions.
 A String can be converted to the target type if:
 
@@ -38,12 +40,16 @@ A String can be converted to the target type if:
 * the test method parameter is annotated with a `@ConvertWith(MyConverter::class)` that implements `SimpleArgumentConverter` or `TypedArgumentConverter`. You can even write your own Meta-Annotation like `@ConvertNameToPerson` or the `JavaTimeConversionPattern` included with JUnit5.
 * the test method parameter is annotated with `@AggregateWith((MyAggregator::class)` that implements `ArgumentsAggregator`. This class can now decide how to aggregate the CsvSource arguments into a single object. You can also write a meta-annotation for this.
 
-Spock does not provide such annotations, implicit or explicity, at least I could not find any.
-Groovy (the underlying language of Spock) does provide a feature called link:https://groovy-lang.org/operators.html#_coercion_operator[Type Coercion] however.
-Groovy also provides link:https://groovy-lang.org/metaprogramming.html#_extension_modules[Extension Modules] that we can add via Module Descriptor by creating a ressources file called `org.codehaus.groovy.runtime.ExtensionModule`.
-This allows us to write `NameToPersonConversion` that provides a conversion from String to Person which gives us the possibility to write `Person person = "John" as Person".
+=== Spock
 
-Sadly Spock does not use type coercion :(.
+Spock does not provide such annotations, implicit or explicity, at least I could not find any.
+
+NOTE: Groovy (the underlying language of Spock) does provide a feature called link:https://groovy-lang.org/operators.html#_coercion_operator[Type Coercion] however.
+Groovy also provides link:https://groovy-lang.org/metaprogramming.html#_extension_modules[Extension Modules] that we can add via Module Descriptor by creating a ressources file called `org.codehaus.groovy.runtime.ExtensionModule`.
+
+In Groovy we can write a `NameToPersonConversion` that provides a conversion from String to Person which gives us the possibility to write `Person person = "John" as Person".
+
+Sadly Spock does not use type coercion :(
 
 If we want to have strong types we can't expect Spock to convert the following table from String to Name and Int to Age:
 
@@ -62,4 +68,5 @@ Name.of("Lisa") | new Age(25)
 ----
 or do the conversion ourselves in the test setup.
 Both are way noisier than having good type conversion the way JUnit5 provides.
-That's very annoying and I don't know how to fix this.
+
+That's very annoying and I don't know how to fix this and it really stumps my interest in Spock.
