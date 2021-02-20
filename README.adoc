@@ -2,17 +2,19 @@
 
 *Features*
 
-* Spock
 * Kotlin Production code with Strong Types
 * Kotlin Testfixture Builders
+* link:http://spockframework.org/[Spock]
+* link:https://junit.org/junit5/[JUnit5] for comparison with Spock
 
 == Usage
 
 * Build complete project `./gradlew build`
+** Two tests will fail because a contract is not fulfilled by an implementation. See <<contract-tests, Contract Tests>> for more information.
 
 == Strong types
 
-By strong types I mean that name and age are not `String` and `Int` but represented by the types `Name` and `Age`.
+By strong types I mean that name and age are not `String` and `Int` but represented by the types link:main/src/main/kotlin/de/richargh/sandbox/spock/strongtypes/Name.kt[Name] and link:main/src/main/kotlin/de/richargh/sandbox/spock/strongtypes/Age.kt[Age].
 
 I want to use strong types
 
@@ -45,9 +47,9 @@ A String can be converted to the target type if:
 Spock does not provide such annotations, implicit or explicity, at least I could not find any.
 
 NOTE: Groovy (the underlying language of Spock) does provide a feature called link:https://groovy-lang.org/operators.html#_coercion_operator[Type Coercion] however.
-Groovy also provides link:https://groovy-lang.org/metaprogramming.html#_extension_modules[Extension Modules] that we can add via Module Descriptor by creating a ressources file called `org.codehaus.groovy.runtime.ExtensionModule`.
+Groovy also provides link:https://groovy-lang.org/metaprogramming.html#_extension_modules[Extension Modules] that we can add via Module Descriptor by creating a resources file called `org.codehaus.groovy.runtime.ExtensionModule`.
 
-In Groovy we can write a `NameToPersonConversion` that provides a conversion from String to Person which gives us the possibility to write `Person person = "John" as Person".
+In Groovy we can write a link:main/src/test/groovy/de/richargh/sandbox/spock/strongtypes/NameToPersonConversion.groovy[NameToPersonConversion] that provides a conversion from String to Person which gives us the possibility to write `Person person = "John" as Person"`.
 
 Sadly Spock does not use type coercion :(
 
@@ -71,8 +73,9 @@ Both are way noisier than having good type conversion the way JUnit5 provides.
 
 That's very annoying and I don't know how to fix this and it really stumps my interest in Spock.
 
+[[contract-tests]]
 == Contract Tests
 
 In addition to the strong types test, this project also implements link:https://blog.thecodewhisperer.com/permalink/getting-started-with-contract-tests[Contract Tests] (for another example see link:http://richargh.de/posts/Contract-Tests-in-Kotlin[here]).
 One abstract link:main/src/test/groovy/de/richargh/sandbox/spock/strongtypes/PeopleContractSpec.groovy[PeopleContractSpec (Spock)] or link:main/src/test/kotlin/de/richargh/sandbox/spock/strongtypes/PeopleContract.kt[PeopleContract (Junit5)] and one or more concrete classes that inject the dependencies to see if they fulfill the contract.
-The NoopPeople implementation doesn't fulfill the contract, which is why the tests are red.
+The link:main/src/testFixtures/kotlin/de/richargh/sandbox/spock/strongtypes/NoopPeople.kt[NoopPeople] implementation doesn't fulfill the contract for link:main/src/main/kotlin/de/richargh/sandbox/spock/strongtypes/People.kt[People], which is why the tests are red.
