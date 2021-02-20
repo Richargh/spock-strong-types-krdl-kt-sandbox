@@ -30,4 +30,11 @@ class PersonSpecification extends Specification {
             "John"  | 5     | "Reporter"
             "Lisa"  | 2     | "Astronaut"
     }
+
+    def "all names are allowed"() {
+        where:
+            person                                          | _
+            person { it.withName("John") }  | _
+            person { it.withName("John") }  | _
+    }
 }

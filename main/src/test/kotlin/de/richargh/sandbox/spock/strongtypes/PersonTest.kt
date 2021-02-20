@@ -10,7 +10,9 @@ import org.junit.jupiter.params.provider.ValueSource
 internal class PersonTest {
 
     @ParameterizedTest
-    @CsvSource(value = ["John, 5, Reporter", "Lisa, 2, Astronaut"])
+    @CsvSource(value = [
+        "John, 5, Reporter",
+        "Lisa, 2, Astronaut"])
     fun `a persons age can never be less than 0`(
             name: Name, age: Age, job: Job) {
         // arrange
@@ -24,15 +26,16 @@ internal class PersonTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["John", "Lisa"])
+    @ValueSource(strings = [
+        "John",
+        "Lisa"])
     fun `all names are allowed`(
             @ConvertWith(NamedPersonConverter::class) testling: Person) {
         // arrange
 
         // act
-        val thrown = catchThrowable { testling.changeAge(Age(-1)) }
 
         // assert
-        assertThat(thrown).isInstanceOf(IllegalArgumentException::class.java)
+        assertThat(testling.name).isNotNull
     }
 }
