@@ -15,7 +15,11 @@ internal class PersonTest {
     fun `a persons age can never be less than 0`(
             name: Name, age: Age, job: Job) {
         // arrange
-        val testling = Person(name, age, job)
+        val testling = person {
+            withName(name)
+            withAge(age)
+            withJob(job)
+        }
 
         // act
         val thrown = catchThrowable { testling.changeAge(Age(-1)) }

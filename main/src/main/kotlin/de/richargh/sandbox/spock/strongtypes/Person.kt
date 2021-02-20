@@ -1,9 +1,11 @@
 package de.richargh.sandbox.spock.strongtypes
 
 data class Person(
+        override val id: PersonId,
         val name: Name,
         val age: Age,
-        val job: Job) {
+        val job: Job)
+    : Entity {
 
     fun changeAge(age: Age): Person {
         if (age < Age.Zero)

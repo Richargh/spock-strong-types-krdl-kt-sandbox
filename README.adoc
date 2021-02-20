@@ -70,3 +70,9 @@ or do the conversion ourselves in the test setup.
 Both are way noisier than having good type conversion the way JUnit5 provides.
 
 That's very annoying and I don't know how to fix this and it really stumps my interest in Spock.
+
+== Contract Tests
+
+In addition to the strong types test, this project also implements link:https://blog.thecodewhisperer.com/permalink/getting-started-with-contract-tests[Contract Tests] (for another example see link:http://richargh.de/posts/Contract-Tests-in-Kotlin[here]).
+One abstract link:main/src/test/groovy/de/richargh/sandbox/spock/strongtypes/PeopleContractSpec.groovy[PeopleContractSpec (Spock)] or link:main/src/test/kotlin/de/richargh/sandbox/spock/strongtypes/PeopleContract.kt[PeopleContract (Junit5)] and one or more concrete classes that inject the dependencies to see if they fulfill the contract.
+The NoopPeople implementation doesn't fulfill the contract, which is why the tests are red.

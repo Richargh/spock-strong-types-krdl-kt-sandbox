@@ -1,14 +1,20 @@
 package de.richargh.sandbox.spock.strongtypes
 
+import java.util.*
+
 @Builder
 class PersonBuilder {
 
+    private var id = PersonId(UUID.randomUUID().toString())
     private var name = Name("John")
     private var age = Age(25)
     private var job: Job = Job.Astronaut
 
     fun build() = Person(
-            name, age, job)
+            id, name, age, job)
+
+    fun withId(id: String) = withId(PersonId(id))
+    fun withId(id: PersonId) = apply { this.id = id }
 
     fun withName(name: String) = withName(Name.of(name))
     fun withName(name: Name) = apply { this.name = name }
