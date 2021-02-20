@@ -10,14 +10,14 @@ class PersonBuilder {
     fun build() = Person(
             name, age, job)
 
-    fun withName(name: String) = withName(Name(name))
+    fun withName(name: String) = withName(Name.of(name))
     fun withName(name: Name) = apply { this.name = name }
 
     fun withAge(age: Int) = withAge(Age(age))
     fun withAge(age: Age) = apply { this.age = age }
 
+    fun withJob(job: String) = withJob(Job.of(job))
     fun withJob(job: Job) = apply { this.job = job }
-
 }
 
 fun person(init: PersonBuilder.() -> Unit) = PersonBuilder().apply(init).build()
