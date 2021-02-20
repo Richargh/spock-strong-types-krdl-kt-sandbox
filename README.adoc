@@ -3,11 +3,63 @@
 *Features*
 
 * Spock
-* Kotlin
-* Strong Types
-* Builders
-* JVM 11
+* Kotlin Production code with Strong Types
+* Kotlin Testfixture Builders
 
 == Usage
 
 * Build complete project `./gradlew build`
+
+== Strong types
+
+By strong types I mean that name and age are not `String` and `Int` but represented by the types `Name` and `Age`.
+
+I want to use strong types
+
+. to be more precise in my code (the thing you are using is not a number, but an age)
+. to be able to constrain these types if needed (a name must not be empty, an age must not be negative)
+. and to create more robust code where passing the wrong type is forbidden by the compiler.
+
+At the same time I want to write compact, focused, noise- and fluff-less tests that used the primitive values instead of the strong types.
+
+This sandbox compares the simple ways that Spock and Junit5 allow implicit and explicit type conversions for parameterized/data-driven tests.
+
+== Test impressions
+
+The tests here are not my best work (I'd say that `all names are allowed` is laughably bad because the test is in the data generator).
+They do serve their purpose though and help me illustrate and compare Spock (and Junit5) features when trying to use strong types in Kotlin.
+
+Junit5 has the `@CsvSource` Annotation for tabular data-driven tests, Spock has the table syntax feature.
+
+Junit5 provides a link:https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests-argument-conversion-implicit-fallback[implicit and explicit] String to Object conversions.
+A String can be converted to the target type if:
+
+* the target type has a `static method` (name does not matter) that takes a `String` and returns an instance of the target or a `secondary constructor` that takes a `String`. That's why we have an `Age.of` method that is annotated with `@JvmStatic`.
+* the test method parameter is annotated with a `@ConvertWith(MyConverter::class)` that implements `SimpleArgumentConverter` or `TypedArgumentConverter`. You can even write your own Meta-Annotation like `@ConvertNameToPerson` or the `JavaTimeConversionPattern` included with JUnit5.
+* the test method parameter is annotated with `@AggregateWith((MyAggregator::class)` that implements `ArgumentsAggregator`. This class can now decide how to aggregate the CsvSource arguments into a single object. You can also write a meta-annotation for this.
+
+Spock does not provide such annotations, implicit or explicity, at least I could not find any.
+Groovy (the underlying language of Spock) does provide a feature called link:https://groovy-lang.org/operators.html#_coercion_operator[Type Coercion] however.
+Groovy also provides link:https://groovy-lang.org/metaprogramming.html#_extension_modules[Extension Modules] that we can add via Module Descriptor by creating a ressources file called `org.codehaus.groovy.runtime.ExtensionModule`.
+This allows us to write `NameToPersonConversion` that provides a conversion from String to Person which gives us the possibility to write `Person person = "John" as Person".
+
+Sadly Spock does not use type coercion :(.
+
+If we want to have strong types we can't expect Spock to convert the following table from String to Name and Int to Age:
+
+[source]
+----
+name   | age
+"John" | 5
+"Lisa" | 25
+----
+Instead we have to write:
+[source]
+----
+name            | age
+Name.of("John") | new Age(5)
+Name.of("Lisa") | new Age(25)
+----
+or do the conversion ourselves in the test setup.
+Both are way noisier than having good type conversion the way JUnit5 provides.
+That's very annoying and I don't know how to fix this.
