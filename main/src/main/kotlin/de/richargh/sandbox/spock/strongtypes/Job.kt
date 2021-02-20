@@ -1,6 +1,6 @@
 package de.richargh.sandbox.spock.strongtypes
 
-sealed class Job {
+sealed class Job: SealedEnum() {
     object Reporter: Job()
     object Astronaut: Job()
 
