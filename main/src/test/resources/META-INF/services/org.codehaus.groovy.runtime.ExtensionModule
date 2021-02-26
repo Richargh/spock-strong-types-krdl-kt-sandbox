@@ -1,3 +1,3 @@
 moduleName=local test extensions
-moduleVersion=0.0.1 
-extensionClasses=de.richargh.sandbox.spock.strongtypes.NameToPersonConversion
+moduleVersion=0.0.1
+extensionClasses=de.richargh.sandbox.spock.strongtypes.IntConversions,de.richargh.sandbox.spock.strongtypes.StringConversions

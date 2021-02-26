@@ -31,22 +31,26 @@ class PersonSpecification extends Specification {
             "Lisa"  | 2     | "Astronaut"
     }
 
-    def "all names are allowed"() {
+    def "all names are allowed"(Name name) {
+        expect:
+            person {it.withName(name) }
+
         where:
-            person                                          | _
-            person { it.withName("John") }  | _
-            person { it.withName("John") }  | _
+            theName  | _
+            "John"   | _
+            "Lisa"   | _
+
+            name = theName as Name
     }
 
-    def "String can be cast to John via type coercion"(){
-        /**
-         * Note that we added the NameToPersonConversion via resources/META-INF.
-         * We could've also added it explicitly in the setup-Method: String.mixin(NameToPersonConversion)
-         */
-        when:
-        Person person = "John" as Person
-        then:
-        person.name == new Name("John")
+    @MakePerson
+    def "all people are allowed"(Person person) {
+        expect:
+            person.name == new Name("John") || person.name == new Name("Lisa")
+        where:
+            name     | age
+            "John"   | 5
+            "Lisa"   | 20
     }
 
 }
