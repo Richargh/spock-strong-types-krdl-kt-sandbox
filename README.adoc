@@ -49,29 +49,46 @@ Spock does not provide such annotations, implicit or explicity, at least I could
 NOTE: Groovy (the underlying language of Spock) does provide a feature called link:https://groovy-lang.org/operators.html#_coercion_operator[Type Coercion] however.
 Groovy also provides link:https://groovy-lang.org/metaprogramming.html#_extension_modules[Extension Modules] that we can add via Module Descriptor by creating a resources file called `org.codehaus.groovy.runtime.ExtensionModule`.
 
-In Groovy we can write a link:main/src/test/groovy/de/richargh/sandbox/spock/strongtypes/NameToPersonConversion.groovy[NameToPersonConversion] that provides a conversion from String to Person which gives us the possibility to write `Person person = "John" as Person"`.
+In Groovy we can write link:main/src/test/groovy/de/richargh/sandbox/spock/strongtypes/StringConversions.groovy[StringConversions] that provide a conversion from String to Person (or Name) which gives us the possibility to write `Person person = "John" as Person"`.
 
-Sadly Spock does not use type coercion :(
+Sadly Spock does not use type coercion yet.
 
-If we want to have strong types we can't expect Spock to convert the following table from String to Name and Int to Age:
+NOTE: A pull request that adds type coercion was merged to spock master on link:https://github.com/spockframework/spock/pull/1280[Feburary 23rd 2021]. Depending on your Spock version type coercion might already be supported. Huge thanks to the Spock time for adding this so quickly.
+
+Most versions of Spock won't convert from String to Name and Int to Age in the following table:
 
 [source]
 ----
+where:
 name   | age
 "John" | 5
 "Lisa" | 25
 ----
-Instead we have to write:
+
+To solve this we could write:
 [source]
 ----
+where:
 name            | age
 Name.of("John") | new Age(5)
 Name.of("Lisa") | new Age(25)
 ----
-or do the conversion ourselves in the test setup.
-Both are way noisier than having good type conversion the way JUnit5 provides.
 
-That's very annoying and I don't know how to fix this and it really stumps my interest in Spock.
+but since that adds too much noise to the table we'd probably write:
+[source]
+----
+where:
+theName | theAge
+"John"  | 5
+"Lisa"  | 2
+
+name = Name.of(theName)
+age = new Age(theAge)
+// or use type coercion directly:
+// name = theName as Name
+----
+
+We could also create an Extension like the link:main/src/test/groovy/de/richargh/sandbox/spock/strongtypes/MakePersonExtension.groovy[MakePersonExtension] that does the type conversion for us.
 
 [[contract-tests]]
 == Contract Tests
